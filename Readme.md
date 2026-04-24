@@ -14,15 +14,25 @@ Since this module uses cgo, you must also make sure you have a C compiler in you
 When ready, get the module like this:
 
 ```
-$ go get github.com/codecat/go-enet
+$ go get github.com/fengwu726/go-enet
 ```
 
 ## Usage
 ```go
-import "github.com/codecat/go-enet"
+import "github.com/fengwu726/go-enet"
 ```
 
 The API is mostly the same as the C API, except it's more object-oriented.
+
+## CRC32 Checksum
+
+You can enable CRC32 packet checksum verification on a host to detect and silently drop corrupted or tampered packets. **Both sides must enable CRC32** for the connection to work correctly.
+
+```go
+host, err := enet.NewHost(...)
+if err != nil { ... }
+host.EnableCRC32()
+```
 
 ## Server example
 This is a basic server example that responds to packets `"ping"` and `"bye"`.
@@ -31,7 +41,7 @@ This is a basic server example that responds to packets `"ping"` and `"bye"`.
 package main
 
 import (
-	"github.com/codecat/go-enet"
+	"github.com/fengwu726/go-enet"
 	"github.com/codecat/go-libs/log"
 )
 
@@ -103,7 +113,7 @@ This is a basic client example that sends a ping to the server every second that
 package main
 
 import (
-	"github.com/codecat/go-enet"
+	"github.com/fengwu726/go-enet"
 	"github.com/codecat/go-libs/log"
 )
 
