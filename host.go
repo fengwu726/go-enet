@@ -14,6 +14,7 @@ type Host interface {
 	Connect(addr Address, channelCount int, data uint32) (Peer, error)
 
 	CompressWithRangeCoder() error
+	EnableCRC32() error
 	BroadcastBytes(data []byte, channel uint8, flags PacketFlags) error
 	BroadcastPacket(packet Packet, channel uint8) error
 	BroadcastString(str string, channel uint8, flags PacketFlags) error
@@ -63,6 +64,14 @@ func (host *enetHost) CompressWithRangeCoder() error {
 		return errors.New("couldn't set the packet compressor to default range coder for unknown reason")
 	}
 
+	return nil
+}
+
+// EnableCRC32 enables CRC32 checksum verification for all packets on this host.
+// When enabled, each packet is tagged with a CRC32 checksum and invalid packets
+// are silently dropped. Both peers must enable CRC32 for it to work correctly.
+func (host *enetHost) EnableCRC32() error {
+	host.cHost.checksum = C.ENetChecksumCallback(C.enet_crc32)
 	return nil
 }
 
